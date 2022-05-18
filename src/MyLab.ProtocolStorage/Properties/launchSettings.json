@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "MyLab.ProtocolStore": {
+    "MyLab.ProtocolStorage": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
