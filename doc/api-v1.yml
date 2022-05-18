@@ -5,7 +5,7 @@ info:
 servers:
   - url: http://app-url/v1
 paths:
-  '/{protocol}':
+  '/protocols/{protocol}':
     post:
       tags:
       - Protocol
