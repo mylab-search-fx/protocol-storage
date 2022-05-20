@@ -30,7 +30,7 @@ namespace MyLab.ProtocolStorage.Controllers
         }
 
         [HttpPost("{protocolId}/collector")]
-        public IActionResult PushEntity([FromQuery] string protocolId, [FromBody] PushProtocolEntityRequest request)
+        public IActionResult PushEvent([FromQuery] string protocolId, [FromBody] PushProtocolEventRequest request)
         {
             if (string.IsNullOrWhiteSpace(protocolId))
                 return BadRequest("ProtocolId is not specified");

@@ -9,7 +9,7 @@ paths:
     post:
       tags:
       - Protocol
-      summary: Pushes new protocol entity
+      summary: Pushes new protocol event
       parameters:
       - $ref: '#/components/parameters/ProtocolId'
       responses:
@@ -23,13 +23,13 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/PushProtocolEntityRequest'
+              $ref: '#/components/schemas/PushProtocolEventRequest'
               
   '/protocols/{protocol}/searcher':
     post:
       tags:
       - Protocol
-      summary: Searches for protocol entities
+      summary: Searches for protocol events
       parameters:
       - $ref: '#/components/parameters/ProtocolId'
       - name: X-Search-Token
@@ -178,22 +178,22 @@ components:
       - should
       - must
 
-    ProtocolEntity:
+    ProtocolEvent:
       type: object
-      description: Contains protocol entity properties
+      description: Contains protocol event properties
       additionalProperties: true
       example:
         date-time: 01-02-2023
         content: This is a protocol message
         
-    PushProtocolEntityRequest:
+    PushProtocolEventRequest:
       type: object
       properties:
-        entity:
-          $ref: '#/components/schemas/ProtocolEntity'
+        event:
+          $ref: '#/components/schemas/ProtocolEvent'
         subject:
           type: string
-          description: Entity subject identifier
+          description: Event subject identifier
           example: 'user@domain.com'
         sender:
           type: string
@@ -205,15 +205,15 @@ components:
           description: Associated date time 
           example: '1985-04-12T23:20:50.52'
       required:
-      - entity
+      - event
       
     SearchResult:
       type: object
       description: Search result
       properties:
-        entites:
+        events:
           type: array
-          description: Found entities
+          description: Found events
           items:
             $ref: '#/components/schemas/SearchResultItem'
         total:
@@ -230,7 +230,7 @@ components:
       properties:
         content:
           type: object
-          description: Indexed entity
+          description: Indexed event
           example: {"id": 10, "Value": "payload"}
         score:
           type: number

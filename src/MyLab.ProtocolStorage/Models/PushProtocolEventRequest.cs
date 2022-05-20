@@ -3,16 +3,16 @@ using Newtonsoft.Json;
 
 namespace MyLab.ProtocolStorage.Models
 {
-    public class PushProtocolEntityRequest
+    public class PushProtocolEventRequest
     {
         /// <summary>
-        /// Protocol entity
+        /// Protocol event
         /// </summary>
-        [JsonProperty("entity")]
-        public JsonObject Entity { get; set; }
+        [JsonProperty("event")]
+        public JsonObject Event { get; set; }
 
         /// <summary>
-        /// Entity subject identifier
+        /// Event subject identifier
         /// </summary>
         [JsonProperty("subject")]
         public string Subject { get; set; }
@@ -29,9 +29,9 @@ namespace MyLab.ProtocolStorage.Models
         [JsonProperty("dateTime")]
         public DateTime? DateTime { get; set; }
 
-        public PushProtocolEntityRequest(string subject, JsonObject entity)
+        public PushProtocolEventRequest(string subject, JsonObject eventObject)
         {
-            Entity = entity;
+            Event = eventObject;
             Subject = subject;
         }
     }
