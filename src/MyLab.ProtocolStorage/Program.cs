@@ -1,36 +1,26 @@
-using MyLab.ApiClient;
-using MyLab.HttpMetrics;
-using MyLab.Log;
-using MyLab.RabbitClient;
-using MyLab.Search.Searcher.Client;
-using MyLab.WebErrors;
-using Prometheus;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-var srv = builder.Services;
-
-srv.AddControllers(opts => opts.AddExceptionProcessing());
-
-srv.AddApiClients(reg =>
+namespace MyLab.ProtocolStorage
+{
+    public class Program
     {
-        reg.RegisterContract<ISearcherApiV3>();
-    }, builder.Configuration)
-    .AddRabbit(RabbitConnectionStrategy.Background)
-    .AddRabbitTracing()
-    .AddLogging(l => l.AddMyLabConsole())
-    .AddUrlBasedHttpMetrics();
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-
-app.UseAuthorization();
-app.UseHttpMetrics();
-
-app.MapControllers();
-app.MapMetrics();
-
-app.Run();
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+    }
+}

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLab.ProtocolStorage", "MyLab.ProtocolStorage\MyLab.ProtocolStorage.csproj", "{1FDDE449-08E3-438E-967E-C6DF1B999010}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLab.ProtocolStorage", "MyLab.ProtocolStorage\MyLab.ProtocolStorage.csproj", "{BAA69EBC-A353-420D-959A-E6A546182EB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{38A85D0D-5AE1-4837-BA6D-8EB5030522DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1FDDE449-08E3-438E-967E-C6DF1B999010}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FDDE449-08E3-438E-967E-C6DF1B999010}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1FDDE449-08E3-438E-967E-C6DF1B999010}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1FDDE449-08E3-438E-967E-C6DF1B999010}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAA69EBC-A353-420D-959A-E6A546182EB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAA69EBC-A353-420D-959A-E6A546182EB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAA69EBC-A353-420D-959A-E6A546182EB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAA69EBC-A353-420D-959A-E6A546182EB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38A85D0D-5AE1-4837-BA6D-8EB5030522DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38A85D0D-5AE1-4837-BA6D-8EB5030522DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38A85D0D-5AE1-4837-BA6D-8EB5030522DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38A85D0D-5AE1-4837-BA6D-8EB5030522DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

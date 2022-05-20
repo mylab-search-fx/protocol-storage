@@ -27,7 +27,7 @@ services:
 
   mps-indexer:
     container_name: mps-indexer
-    image: docker pull ghcr.io/mylab-search-fx/indexer:1.4.9
+    image: ghcr.io/mylab-search-fx/indexer:1.4.9
     environment:
       MQ__Host: mps-mq
       ES__Url: http://mps-es:9200
@@ -36,6 +36,7 @@ services:
 
 volumes:
   mylab_search_test_es_data:
+  mylab_search_test_mq_data:
 
 networks:
   mylab-protocol-storage-test:
