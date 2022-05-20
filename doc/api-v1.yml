@@ -5,11 +5,11 @@ info:
 servers:
   - url: http://app-url/v1
 paths:
-  '/protocols/{protocol}':
+  '/protocols/{protocol}/collector':
     post:
       tags:
       - Protocol
-      description: Pushes new protocol entity
+      summary: Pushes new protocol entity
       parameters:
       - $ref: '#/components/parameters/ProtocolId'
       responses:
@@ -25,11 +25,11 @@ paths:
             schema:
               $ref: '#/components/schemas/PushProtocolEntityRequest'
               
-  '/search/{protocol}':
+  '/protocols/{protocol}/searcher':
     post:
       tags:
       - Protocol
-      description: Searches for protocol entities
+      summary: Searches for protocol entities
       parameters:
       - $ref: '#/components/parameters/ProtocolId'
       - name: X-Search-Token
@@ -67,18 +67,13 @@ paths:
                 type: string
                 example: 'Wrong audience'
       
-  '/{protocol}/search-token':
+  '/search-token/total':
     post:
       tags: 
       - Token
-      description: Creates search token for specified labels
+      summary: Creates search token without restrictions
       parameters:
       - $ref: '#/components/parameters/ProtocolId'
-      requestBody:
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/ProtocolEntityLabels'
       responses:
         '200':
           description: Search token issued
@@ -87,7 +82,27 @@ paths:
               schema:
                 type: string
                 format: jwt
-              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjg3MTE4MzcsImF1ZCI6WyJ1c2VycyIsIm9yZGVycyJdLCJteWxhYjpzZWFyY2gtZGxndDpuYW1lc3BhY2VzIjp7InVzZXJzIjp7ImZpbHRlcnMiOnt9fSwib3JkZXJzIjp7ImZpbHRlcnMiOnsib25seV9teV9vcmRlcnMiOnsidXNlciI6InVzZXJAZG9tYWluLmNvbSJ9fX19fQ.sagf0qhKM7TAxtuYcSGygZe7pls5nsO8khWl6zHOnY4'
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjg3MTE4MzcsImF1ZCI6WyJsb2dpbiJdLCJteWxhYjpzZWFyY2hlcjpuYW1lc3BhY2VzIjp7ImxvZ2luIjp7ImZpbHRlcnMiOnt9fX19.in9G02Wvuq3kVhParHyUAdIlvtaVn2Z4J6RQ4aWgBlA'
+        '423':
+          description: Token issuing is disabled
+          
+  '/search-token/for-subject/{subject}':
+    post:
+      tags: 
+      - Token
+      summary: Creates search token for specified subject
+      parameters:
+      - $ref: '#/components/parameters/ProtocolId'
+      - $ref: '#/components/parameters/SubjectId'
+      responses:
+        '200':
+          description: Search token issued
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: jwt
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjg3MTE4MzcsImF1ZCI6WyJsb2dpbiJdLCJteWxhYjpzZWFyY2hlcjpuYW1lc3BhY2VzIjp7ImxvZ2luIjp7ImZpbHRlcnMiOnsib25seV9teV9sb2dpbnMiOnsic3ViamVjdCI6InVzZXJAZG9tYWluLmNvbSJ9fX19fQ.Zpu26uh4z9S2-tq_NCSwE6PtFuBS2a0sK-1gBzg4t8E'
         '423':
           description: Token issuing is disabled
 
@@ -101,6 +116,15 @@ components:
       schema:
         type: string
       example: 'login'
+      
+    SubjectId:
+      in: path
+      name: subject
+      required: true
+      description: Subject identifier
+      schema:
+        type: string
+      example: 'user@domain.com'
       
   schemas:
 
@@ -162,26 +186,24 @@ components:
         date-time: 01-02-2023
         content: This is a protocol message
         
-    ProtocolEntityLabels:
-      type: object
-      description: Contains protocol entity labels
-      additionalProperties:
-        type: string
-      example:
-        user-id: '123-456'
-        group-id: '123'
-
     PushProtocolEntityRequest:
       type: object
       properties:
         entity:
           $ref: '#/components/schemas/ProtocolEntity'
-        labels:
-          $ref: '#/components/schemas/ProtocolEntityLabels'
+        subject:
+          type: string
+          description: Entity subject identifier
+          example: 'user@domain.com'
         sender:
           type: string
-          description: Sender identifier
+          description: Sender application identifier
           example: login-service
+        dateTime:
+          type: string
+          format: date-time
+          description: Associated date time 
+          example: '1985-04-12T23:20:50.52'
       required:
       - entity
       

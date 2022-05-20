@@ -2,5 +2,40 @@ version: '3.2'
 
 services:
 
+  mps-es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
+    container_name: mps-es
+    environment:
+      - discovery.type=single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - mylab_search_test_es_data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+  mps-mq:
+    container_name: mps-mq
+    image: rabbitmq:3.8.3-management
+    volumes:
+      - mylab_search_test_mq_data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  mps-indexer:
+    container_name: mps-indexer
+    image: docker pull ghcr.io/mylab-search-fx/indexer:1.4.9
+    environment:
+      MQ__Host: mps-mq
+      ES__Url: http://mps-es:9200
+    volumes:
+    - ./indexer/appsettings.json:/app/appsettings.json
+
+volumes:
+  mylab_search_test_es_data:
+
 networks:
   mylab-protocol-storage-test:
