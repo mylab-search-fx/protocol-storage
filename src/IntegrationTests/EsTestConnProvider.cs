@@ -2,12 +2,14 @@ using System;
 using Elasticsearch.Net;
 using MyLab.Search.EsTest;
 
-namespace IntegrationTests;
-
-public class EsTestConnProvider : IConnectionProvider
+namespace IntegrationTests
 {
-    public IConnectionPool Provide()
+
+    public class EsTestConnProvider : IConnectionProvider
     {
-        return new SingleNodeConnectionPool(new Uri("http://localhost:9200"));
+        public IConnectionPool Provide()
+        {
+            return new SingleNodeConnectionPool(new Uri("http://localhost:9200"));
+        }
     }
 }

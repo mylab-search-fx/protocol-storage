@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\MyLab.ProtocolStorage\Models\ClientSearchRequest.cs" Link="Models\ClientSearchRequest.cs" />
+    <Compile Include="..\MyLab.ProtocolStorage\Models\FilterRef.cs" Link="Models\FilterRef.cs" />
+    <Compile Include="..\MyLab.ProtocolStorage\Models\PushProtocolEventRequest.cs" Link="Models\PushProtocolEventRequest.cs" />
+    <Compile Include="..\MyLab.ProtocolStorage\Models\QuerySearchStrategy.cs" Link="Models\QuerySearchStrategy.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MyLab.ApiClient" Version="3.13.24" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+</Project>

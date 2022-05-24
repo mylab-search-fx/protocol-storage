@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLab.ProtocolStorage", "My
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{38A85D0D-5AE1-4837-BA6D-8EB5030522DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyLab.ProtocolStorage.Client", "MyLab.ProtocolStorage.Client\MyLab.ProtocolStorage.Client.csproj", "{B8A183D0-926D-470D-B1AE-8CFD69669B39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{38A85D0D-5AE1-4837-BA6D-8EB5030522DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38A85D0D-5AE1-4837-BA6D-8EB5030522DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38A85D0D-5AE1-4837-BA6D-8EB5030522DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8A183D0-926D-470D-B1AE-8CFD69669B39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8A183D0-926D-470D-B1AE-8CFD69669B39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8A183D0-926D-470D-B1AE-8CFD69669B39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8A183D0-926D-470D-B1AE-8CFD69669B39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
