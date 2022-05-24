@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MyLab.ProtocolStorage.Client\MyLab.ProtocolStorage.Client.csproj" />
     <ProjectReference Include="..\MyLab.ProtocolStorage\MyLab.ProtocolStorage.csproj" />
   </ItemGroup>
 
