@@ -1,8 +1,8 @@
 {
   "Indexer": {
-    "Namespaces":[ 
+    "Indexes":[ 
       {
-        "NsId": "login",
+        "Id": "login",
         "MqQueue": "login-protocol",
         "NewUpdatesStrategy": "Add",
         "NewIndexStrategy": "Auto",
