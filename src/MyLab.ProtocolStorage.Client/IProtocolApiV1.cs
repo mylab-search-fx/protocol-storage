@@ -15,7 +15,7 @@ namespace MyLab.ProtocolStorage.Client
         /// Pushes event into specified protocol
         /// </summary>
         [Post("{protocolId}/collector")]
-        Task PushEventAsync([Path]string protocolId, [JsonContent] PushProtocolEventRequest request);
+        Task PushEventAsync([Path]string protocolId, [JsonContent] PostProtocolEventRequest request);
 
         /// <summary>
         /// Searches for specified protocol items

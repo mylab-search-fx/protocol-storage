@@ -35,14 +35,14 @@ namespace MyLab.ProtocolStorage.Controllers
         }
 
         [HttpPost("{protocolId}/collector")]
-        public IActionResult PushEvent([FromRoute] string protocolId, [FromBody] PushProtocolEventRequest request)
+        public IActionResult PushEvent([FromRoute] string protocolId, [FromBody] PostProtocolEventRequest request)
         {
             if (string.IsNullOrWhiteSpace(protocolId))
                 return BadRequest("ProtocolId is not specified");
 
-            request.DateTime ??= DateTime.Now;
+            var resultEventObj = request.ToJsonWithMetadata(DateTime.Now);
 
-            _rabbitPublisher.IntoDefault().SendJson(request).Publish();
+            _rabbitPublisher.IntoDefault().SendJson(resultEventObj).Publish();
 
             return Ok();
         }
@@ -72,6 +72,9 @@ namespace MyLab.ProtocolStorage.Controllers
             };
 
             var res = await _searcherApi.SearchAsync<JObject>(protocolId, searchReq, searchToken);
+
+            foreach (var foundEntity in res.Entities)
+                ProtocolEventMetadata.CleanupJson(foundEntity.Content);
 
             return Ok(res);
 

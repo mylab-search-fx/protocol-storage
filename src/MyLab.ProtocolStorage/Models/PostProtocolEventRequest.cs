@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace MyLab.ProtocolStorage.Models
 {
-    public class PushProtocolEventRequest
+    public class PostProtocolEventRequest
     {
         /// <summary>
         /// Protocol event

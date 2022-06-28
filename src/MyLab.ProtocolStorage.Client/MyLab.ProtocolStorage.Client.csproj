@@ -7,12 +7,8 @@
   <ItemGroup>
     <Compile Include="..\MyLab.ProtocolStorage\Models\ClientSearchRequest.cs" Link="Models\ClientSearchRequest.cs" />
     <Compile Include="..\MyLab.ProtocolStorage\Models\FilterRef.cs" Link="Models\FilterRef.cs" />
-    <Compile Include="..\MyLab.ProtocolStorage\Models\PushProtocolEventRequest.cs" Link="Models\PushProtocolEventRequest.cs" />
+    <Compile Include="..\MyLab.ProtocolStorage\Models\PostProtocolEventRequest.cs" Link="Models\PostProtocolEventRequest.cs" />
     <Compile Include="..\MyLab.ProtocolStorage\Models\QuerySearchStrategy.cs" Link="Models\QuerySearchStrategy.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>
