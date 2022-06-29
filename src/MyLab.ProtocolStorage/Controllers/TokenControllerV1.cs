@@ -53,7 +53,7 @@ namespace MyLab.ProtocolStorage.Controllers
                         {
                             new FilterRef
                             {
-                                Id = "_by-subject",
+                                Id = "by-subject",
                                 Args = new Dictionary<string, string>
                                 {
                                     {"subject", subjectId}
