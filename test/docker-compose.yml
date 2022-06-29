@@ -27,22 +27,22 @@ services:
 
   mps-indexer:
     container_name: mps-indexer
-    image: ghcr.io/mylab-search-fx/indexer:1.4.9
+    image: ghcr.io/mylab-search-fx/indexer:local
     environment:
       MQ__Host: mps-mq
       ES__Url: http://mps-es:9200
     volumes:
-    - ./indexer/appsettings.json:/app/appsettings.json
+    - ./indexer-appsettings.json:/app/appsettings.json
     ports:
       - 80:8085
 
   mps-searcher:
     container_name: mps-searcher
-    image: ghcr.io/mylab-search-fx/searcher:1.6.7
+    image: ghcr.io/mylab-search-fx/searcher:local
     environment:
       ES__Url: http://mps-es:9200
     volumes:
-    - ./searcher/appsettings.json:/app/appsettings.json
+    - ./searcher-appsettings.json:/app/appsettings.json
     ports:
       - 80:8086
 

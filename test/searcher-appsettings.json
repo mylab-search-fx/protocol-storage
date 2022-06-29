@@ -1,0 +1,14 @@
+{
+  "Searcher": {
+    "Token": {
+      "ExpirySec": "10",
+      "SignKey": "test-test-test-test"
+    },
+    "Indexes":[ 
+      {
+        "Id": "login",
+        "EsIndex": "login-index"
+      }
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+	"term": {
+		"_protocol.dateTime": {
+	      "gte": "{from}",
+	      "lt": "{to}"
+	    }
+	}
+}

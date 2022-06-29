@@ -1,14 +1,12 @@
 {
   "Indexer": {
+    "MqQueue": "protocol",
     "Indexes":[ 
       {
         "Id": "login",
-        "MqQueue": "login-protocol",
-        "NewUpdatesStrategy": "Add",
-        "NewIndexStrategy": "Auto",
-        "EnablePaging": "true",
-        "PageSize": "10",
-        "EsIndex": "login-index"      
+        "EsIndex": "login-index",
+        "IndexType": "Stream",
+        "IdPropertyType": "string"   
       }
     ]
   }

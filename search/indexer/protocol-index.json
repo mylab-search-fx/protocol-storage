@@ -1,12 +1,12 @@
 {
 	"mappings": {
 		"properties": {
-			"sender": { "type": "keyword" },
-			"subject": { "type": "keyword" },
-			"dateTime": { "type": "date" },
-			"event":{ 
-				"dynamic": true,
-				"properties": {}
+			"_protocol":{
+					"properties":{
+					"sender": { "type": "keyword" },
+					"subject": { "type": "keyword" },
+					"dateTime": { "type": "date" }
+				}
 			}
 		}
 	}
