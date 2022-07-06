@@ -1,10 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MyLab.ApiClient;
 using MyLab.Log.Dsl;
 using MyLab.ProtocolStorage.Models;
 using MyLab.RabbitClient.Publishing;
@@ -86,8 +89,22 @@ namespace MyLab.ProtocolStorage.Controllers
                 ).ToArray(),
                 QuerySearchStrategy = request.QuerySearchStrategy
             };
+            
+            FoundEntities<JObject> res;
 
-            var res = await _searcherApi.SearchAsync<JObject>(protocolId, searchReq, searchToken);
+            try
+            {
+                res = await _searcherApi.SearchAsync<JObject>(protocolId, searchReq, searchToken);
+            }
+            catch (ResponseCodeException e) when (e.StatusCode == HttpStatusCode.Forbidden)
+            {
+                return new ContentResult
+                {
+                    Content = e.ServerMessage,
+                    ContentType = "text/plain",
+                    StatusCode = 403
+                };
+            }
             
             return Ok(new SearchResult
             {
