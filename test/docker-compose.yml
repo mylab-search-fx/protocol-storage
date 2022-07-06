@@ -58,7 +58,7 @@ services:
       ES__Url: http://mps-es:9200
       Logging__LogLevel__Default: Debug
       Searcher__Debug: "true"
-      #TZ: Europe/Moscow
+      TZ: Europe/Moscow
     volumes:
     - ./searcher-appsettings.json:/app/appsettings.json
     ports:
