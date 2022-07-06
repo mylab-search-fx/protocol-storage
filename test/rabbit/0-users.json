@@ -1,0 +1,10 @@
+{
+    "users": [
+        {
+            "name": "test",
+            "password_hash": "t1TvXRDuC1XrCuJpY7LUqNnUMDAij4YsVGRsAmvhLnAB0clA",
+            "hashing_algorithm": "rabbit_password_hashing_sha256",
+            "tags": "administrator"
+        }
+    ]
+}

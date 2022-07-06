@@ -13,8 +13,8 @@ namespace IntegrationTests
             {
                 Host = "localhost",
                 Port = 5672,
-                User = "guest",
-                Password = "guest"
+                User = "test",
+                Password = "AICQ0kiYgjUcQNL1AfRA"
             };
 
             var connProvider = new LazyRabbitConnectionProvider(opts);

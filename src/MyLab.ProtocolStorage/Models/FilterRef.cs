@@ -1,7 +1,11 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
+#if SERVER
 namespace MyLab.ProtocolStorage.Models
+#else
+namespace MyLab.ProtocolStorage.Client.Models
+#endif
 {
     /// <summary>
     /// Reference to filter

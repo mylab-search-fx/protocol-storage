@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -7,7 +8,10 @@ using Microsoft.Extensions.Logging;
 using MyLab.Log.Dsl;
 using MyLab.ProtocolStorage.Models;
 using MyLab.RabbitClient.Publishing;
+using MyLab.Search.IndexerClient;
 using MyLab.Search.Searcher.Client;
+using MyLab.Search.SearcherClient;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using QuerySearchStrategy = MyLab.Search.Searcher.Client.QuerySearchStrategy;
 
@@ -35,14 +39,26 @@ namespace MyLab.ProtocolStorage.Controllers
         }
 
         [HttpPost("{protocolId}/collector")]
-        public IActionResult PushEvent([FromRoute] string protocolId, [FromBody] PostProtocolEventRequest request)
+        public async Task<IActionResult> PushEvent([FromRoute] string protocolId)
         {
             if (string.IsNullOrWhiteSpace(protocolId))
                 return BadRequest("ProtocolId is not specified");
 
-            var resultEventObj = request.ToJsonWithMetadata(DateTime.Now);
+            var protocolEvent = await ReadJsonFromRequestBodyAsync();
 
-            _rabbitPublisher.IntoDefault().SendJson(resultEventObj).Publish();
+            ProtocolEventTools.SetRandomIdIfNotDefined(protocolEvent, out _);
+            ProtocolEventTools.SetDateTimeNowIfNotDefined(protocolEvent, out _);
+
+            var mwMsg = new IndexingMqMessage
+            {
+                IndexId = protocolId,
+                Post = new[]
+                {
+                    protocolEvent
+                }
+            };
+
+            _rabbitPublisher.IntoDefault().SetJsonContent(mwMsg).Publish();
 
             return Ok();
         }
@@ -68,16 +84,31 @@ namespace MyLab.ProtocolStorage.Controllers
                         Args = f.Args
                     }
                 ).ToArray(),
-                QuerySearchStrategy = (QuerySearchStrategy)request.QuerySearchStrategy
+                QuerySearchStrategy = request.QuerySearchStrategy
             };
 
             var res = await _searcherApi.SearchAsync<JObject>(protocolId, searchReq, searchToken);
+            
+            return Ok(new SearchResult
+            {
+                EsRequest = res.EsRequest,
+                Events = res.Entities,
+                Total = res.Total
+            });
 
-            foreach (var foundEntity in res.Entities)
-                ProtocolEventMetadata.CleanupJson(foundEntity.Content);
+        }
 
-            return Ok(res);
+        private async Task<JObject> ReadJsonFromRequestBodyAsync()
+        {
+            JObject doc;
 
+            using (TextReader txtRdr = new StreamReader(Request.Body))
+            using (JsonReader jsonRdr = new JsonTextReader(txtRdr))
+            {
+                doc = await JObject.LoadAsync(jsonRdr);
+            }
+
+            return doc;
         }
     }
 }

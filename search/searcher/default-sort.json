@@ -1,5 +1,5 @@
 {
-  "_protocol.dateTime": {
+  "datetime": {
      "order": "desc"
   }
 }

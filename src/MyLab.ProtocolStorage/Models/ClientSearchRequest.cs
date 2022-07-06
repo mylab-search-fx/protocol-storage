@@ -1,7 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using MyLab.Search.Searcher.Client;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
+#if SERVER
 namespace MyLab.ProtocolStorage.Models
+#else
+namespace MyLab.ProtocolStorage.Client.Models
+#endif
 {
     public class ClientSearchRequest
     {

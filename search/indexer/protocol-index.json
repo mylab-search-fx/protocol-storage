@@ -1,13 +1,9 @@
 {
 	"mappings": {
 		"properties": {
-			"_protocol":{
-					"properties":{
-					"sender": { "type": "keyword" },
-					"subject": { "type": "keyword" },
-					"dateTime": { "type": "date" }
-				}
-			}
+			"id": { "type": "keyword" },
+			"subject": { "type": "keyword" },
+			"datetime": { "type": "date" }
 		}
 	}
 }

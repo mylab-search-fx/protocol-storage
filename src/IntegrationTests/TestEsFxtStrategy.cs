@@ -1,13 +1,12 @@
-using System;
+﻿using System;
 using Elasticsearch.Net;
 using MyLab.Search.EsTest;
 
 namespace IntegrationTests
 {
-
-    public class EsTestConnProvider : IConnectionProvider
+    public class TestEsFxtStrategy : EsFixtureStrategy
     {
-        public IConnectionPool Provide()
+        public override IConnectionPool ProvideConnection()
         {
             return new SingleNodeConnectionPool(new Uri("http://localhost:9200"));
         }

@@ -1,6 +1,6 @@
 {
-	"term": {
-		"_protocol.dateTime": {
+	"range": {
+		"datetime": {
 	      "gte": "{from}",
 	      "lt": "{to}"
 	    }

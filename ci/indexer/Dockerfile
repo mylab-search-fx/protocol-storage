@@ -1,4 +1,3 @@
-FROM ghcr.io/mylab-search-fx/searcher:local
+FROM ghcr.io/mylab-search-fx/indexer:local
 
-COPY default-sort.json /etc/mylab-search-searcher/sort/default.json
-COPY filters /etc/mylab-search-searcher/filter
+COPY protocol-index.json /etc/mylab-indexer/indexes/

@@ -7,6 +7,9 @@ services:
     container_name: mps-es
     environment:
       - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - TZ=Europe/Moscow
     ulimits:
       memlock:
         soft: -1
@@ -21,34 +24,52 @@ services:
     image: rabbitmq:3.8.3-management
     volumes:
       - mylab_search_test_mq_data:/var/lib/rabbitmq
+      - ./rabbit/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbit/0-users.json:/etc/rabbitmq/definitions/0-users.json
+      - ./rabbit/1-defs.json:/etc/rabbitmq/definitions/1-defs.json
+    environment:
+      TZ: Europe/Moscow
     ports:
       - "5672:5672"
       - "15672:15672"
 
   mps-indexer:
     container_name: mps-indexer
-    image: ghcr.io/mylab-search-fx/indexer:local
+    image: ghcr.io/mylab-tools/propocol-storage-indexer:local
     environment:
       MQ__Host: mps-mq
+      MQ__User: test
+      MQ__Password: AICQ0kiYgjUcQNL1AfRA
       ES__Url: http://mps-es:9200
+      Logging__LogLevel__Default: Debug
+      TZ: Europe/Moscow
     volumes:
     - ./indexer-appsettings.json:/app/appsettings.json
     ports:
-      - 80:8085
+      - 8085:80
+    depends_on:
+    - mps-mq
+    - mps-es
 
   mps-searcher:
     container_name: mps-searcher
-    image: ghcr.io/mylab-search-fx/searcher:local
+    image: ghcr.io/mylab-tools/protocol-storage-searcher:local
     environment:
       ES__Url: http://mps-es:9200
+      Logging__LogLevel__Default: Debug
+      Searcher__Debug: "true"
+      #TZ: Europe/Moscow
     volumes:
     - ./searcher-appsettings.json:/app/appsettings.json
     ports:
-      - 80:8086
+      - 8086:80
+    depends_on:
+    - mps-es
 
 volumes:
   mylab_search_test_es_data:
   mylab_search_test_mq_data:
 
 networks:
-  mylab-protocol-storage-test:
+  default:
+    name: mylab-protocol-storage-test

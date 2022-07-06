@@ -8,6 +8,7 @@ using MyLab.HttpMetrics;
 using MyLab.Log;
 using MyLab.RabbitClient;
 using MyLab.Search.Searcher.Client;
+using MyLab.Search.SearcherClient;
 using MyLab.WebErrors;
 using Prometheus;
 
@@ -26,7 +27,9 @@ namespace MyLab.ProtocolStorage
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers(opts => opts.AddExceptionProcessing());
+            services
+                .AddControllers(opts => opts.AddExceptionProcessing())
+                .AddNewtonsoftJson();
 
             services.AddApiClients(reg =>
                 {

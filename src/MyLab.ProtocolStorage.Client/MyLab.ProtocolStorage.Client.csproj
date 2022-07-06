@@ -7,12 +7,12 @@
   <ItemGroup>
     <Compile Include="..\MyLab.ProtocolStorage\Models\ClientSearchRequest.cs" Link="Models\ClientSearchRequest.cs" />
     <Compile Include="..\MyLab.ProtocolStorage\Models\FilterRef.cs" Link="Models\FilterRef.cs" />
-    <Compile Include="..\MyLab.ProtocolStorage\Models\PostProtocolEventRequest.cs" Link="Models\PostProtocolEventRequest.cs" />
-    <Compile Include="..\MyLab.ProtocolStorage\Models\QuerySearchStrategy.cs" Link="Models\QuerySearchStrategy.cs" />
+    <Compile Include="..\MyLab.ProtocolStorage\Models\SearchResult.cs" Link="Models\SearchResult.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MyLab.ApiClient" Version="3.13.24" />
+    <PackageReference Include="MyLab.ApiClient" Version="3.15.25" />
+    <PackageReference Include="MyLab.Search.SearcherClient" Version="1.7.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 

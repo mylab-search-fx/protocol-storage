@@ -3,8 +3,8 @@
     "MqQueue": "protocol",
     "Indexes":[ 
       {
-        "Id": "login",
-        "EsIndex": "login-index",
+        "Id": "test",
+        "EsIndex": "test-index",
         "IndexType": "Stream",
         "IdPropertyType": "string"   
       }

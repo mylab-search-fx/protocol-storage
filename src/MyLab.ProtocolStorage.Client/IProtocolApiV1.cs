@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using MyLab.ApiClient;
-using MyLab.ProtocolStorage.Models;
-using Newtonsoft.Json.Linq;
+using MyLab.ProtocolStorage.Client.Models;
 
 namespace MyLab.ProtocolStorage.Client
 {
@@ -15,12 +14,12 @@ namespace MyLab.ProtocolStorage.Client
         /// Pushes event into specified protocol
         /// </summary>
         [Post("{protocolId}/collector")]
-        Task PushEventAsync([Path]string protocolId, [JsonContent] PostProtocolEventRequest request);
+        Task PostEventAsync([Path]string protocolId, [JsonContent] ProtocolEvent eventObj);
 
         /// <summary>
         /// Searches for specified protocol items
         /// </summary>
-        [Post("{protocolId}/collector")]
-        Task<JObject> SearchAsync([Path] string protocolId, [JsonContent] ClientSearchRequest request, [Header("X-Search-Token")] string searchToken);
+        [Post("{protocolId}/searcher")]
+        Task<SearchResult> SearchAsync([Path] string protocolId, [JsonContent] ClientSearchRequest request, [Header("X-Search-Token")] string searchToken);
     }
 }

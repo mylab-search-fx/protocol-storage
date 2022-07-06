@@ -6,8 +6,8 @@
     },
     "Indexes":[ 
       {
-        "Id": "login",
-        "EsIndex": "login-index"
+        "Id": "test",
+        "EsIndex": "test-index"
       }
     ]
   }
