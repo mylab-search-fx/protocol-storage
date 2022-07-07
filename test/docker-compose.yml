@@ -43,8 +43,8 @@ services:
       ES__Url: http://mps-es:9200
       Logging__LogLevel__Default: Debug
       TZ: Europe/Moscow
-    volumes:
-    - ./indexer-appsettings.json:/app/appsettings.json
+      Indexer__MqQueue: protocol
+      Indexer__EsIndexNamePrefix: test-
     ports:
       - 8085:80
     depends_on:
@@ -58,9 +58,10 @@ services:
       ES__Url: http://mps-es:9200
       Logging__LogLevel__Default: Debug
       Searcher__Debug: "true"
+      Searcher__Token__ExpirySec: 10
+      Searcher__Token__SignKey: test-test-test-test
+      Searcher__EsIndexNamePrefix: test-
       TZ: Europe/Moscow
-    volumes:
-    - ./searcher-appsettings.json:/app/appsettings.json
     ports:
       - 8086:80
     depends_on:
