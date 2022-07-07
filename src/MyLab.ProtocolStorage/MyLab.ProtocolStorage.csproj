@@ -18,10 +18,10 @@
     <PackageReference Include="MyLab.HttpMetrics" Version="1.1.3" />
     <PackageReference Include="MyLab.Log" Version="3.3.15" />
     <PackageReference Include="MyLab.Log.Dsl" Version="3.5.3" />
-    <PackageReference Include="MyLab.RabbitClient" Version="2.9.19" />
+    <PackageReference Include="MyLab.RabbitClient" Version="2.9.20" />
     <PackageReference Include="MyLab.RabbitTracing" Version="1.1.5" />
-    <PackageReference Include="MyLab.Search.IndexerClient" Version="2.9.17" />
-    <PackageReference Include="MyLab.Search.SearcherClient" Version="1.7.8" />
+    <PackageReference Include="MyLab.Search.IndexerClient" Version="2.0.0" />
+    <PackageReference Include="MyLab.Search.SearcherClient" Version="1.8.7" />
     <PackageReference Include="MyLab.WebErrors" Version="1.1.5" />
     <PackageReference Include="prometheus-net" Version="6.0.0" />
   </ItemGroup>
