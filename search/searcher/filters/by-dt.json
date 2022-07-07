@@ -1,0 +1,8 @@
+{
+	"range": {
+		"datetime": {
+	      "gte": "{from}",
+	      "lt": "{to}"
+	    }
+	}
+}

@@ -1,0 +1,250 @@
+openapi: 3.0.0
+info:
+  title: MyLab.ProtocolStorage API
+  version: '1'
+servers:
+  - url: http://app-url/v1
+paths:
+  '/protocols/{protocol}/collector':
+    post:
+      tags:
+      - Protocol
+      summary: Pushes new protocol event
+      parameters:
+      - $ref: '#/components/parameters/ProtocolId'
+      responses:
+        '200':
+          description: Successful pushed
+        '404':
+          description: Protocol not found
+        '400':
+          description: Request error
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/PushProtocolEventRequest'
+              
+  '/protocols/{protocol}/searcher':
+    post:
+      tags:
+      - Protocol
+      summary: Searches for protocol events
+      parameters:
+      - $ref: '#/components/parameters/ProtocolId'
+      - name: X-Search-Token
+        in: header
+        required: false
+        description: Search token
+        schema: 
+          type: string
+          format: jwt
+        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjg3MTE4MzcsImF1ZCI6WyJ1c2VycyIsIm9yZGVycyJdLCJteWxhYjpzZWFyY2gtZGxndDpuYW1lc3BhY2VzIjp7InVzZXJzIjp7ImZpbHRlcnMiOnt9fSwib3JkZXJzIjp7ImZpbHRlcnMiOnsib25seV9teV9vcmRlcnMiOnsidXNlciI6InVzZXJAZG9tYWluLmNvbSJ9fX19fQ.sagf0qhKM7TAxtuYcSGygZe7pls5nsO8khWl6zHOnY4'
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Search result
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+        '400':
+          description: Request error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Filter not found'
+        '403':
+          description: Search token validation error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'Wrong audience'
+      
+  '/search-token/total':
+    post:
+      tags: 
+      - Token
+      summary: Creates search token without restrictions
+      parameters:
+      - $ref: '#/components/parameters/ProtocolId'
+      responses:
+        '200':
+          description: Search token issued
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: jwt
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjg3MTE4MzcsImF1ZCI6WyJsb2dpbiJdLCJteWxhYjpzZWFyY2hlcjpuYW1lc3BhY2VzIjp7ImxvZ2luIjp7ImZpbHRlcnMiOnt9fX19.in9G02Wvuq3kVhParHyUAdIlvtaVn2Z4J6RQ4aWgBlA'
+        '423':
+          description: Token issuing is disabled
+          
+  '/search-token/for-subject/{subject}':
+    post:
+      tags: 
+      - Token
+      summary: Creates search token for specified subject
+      parameters:
+      - $ref: '#/components/parameters/ProtocolId'
+      - $ref: '#/components/parameters/SubjectId'
+      responses:
+        '200':
+          description: Search token issued
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: jwt
+              example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjg3MTE4MzcsImF1ZCI6WyJsb2dpbiJdLCJteWxhYjpzZWFyY2hlcjpuYW1lc3BhY2VzIjp7ImxvZ2luIjp7ImZpbHRlcnMiOnsib25seV9teV9sb2dpbnMiOnsic3ViamVjdCI6InVzZXJAZG9tYWluLmNvbSJ9fX19fQ.Zpu26uh4z9S2-tq_NCSwE6PtFuBS2a0sK-1gBzg4t8E'
+        '423':
+          description: Token issuing is disabled
+
+components:
+  parameters:
+    ProtocolId:
+      in: path
+      name: protocol
+      required: true
+      description: Protocol identifier
+      schema:
+        type: string
+      example: 'login'
+      
+    SubjectId:
+      in: path
+      name: subject
+      required: true
+      description: Subject identifier
+      schema:
+        type: string
+      example: 'user@domain.com'
+      
+  schemas:
+
+    SearchRequest:
+      type: object
+      description: Searh parameters
+      properties:
+        query:
+          description: Query string 
+          type: string
+          example: 'something I want to search'
+        offset:
+          description: Paging offset
+          type: integer
+          example: 0
+        limit:
+          description: Paging size
+          type: integer
+          example: 10
+        queryMode:
+          $ref: '#/components/schemas/QuerySearchMode'
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/FiltersCall'
+    
+    FiltersCall:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Filter identifier
+          example: only_my
+        args:
+          $ref: '#/components/schemas/FilterArgs'
+      required:
+      - id
+      
+    FilterArgs:
+      type: object
+      additionalProperties:
+        type: string
+      example:
+        user: user@host.ru
+        less_then: 10
+    
+    QuerySearchMode:
+      type: string
+      description: Query search mode
+      enum:
+      - should
+      - must
+
+    ProtocolEvent:
+      type: object
+      description: Contains protocol event properties
+      additionalProperties: true
+      example:
+        date-time: 01-02-2023
+        content: This is a protocol message
+        
+    PushProtocolEventRequest:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/ProtocolEvent'
+        subject:
+          type: string
+          description: Event subject identifier
+          example: 'user@domain.com'
+        sender:
+          type: string
+          description: Sender application identifier
+          example: login-service
+        dateTime:
+          type: string
+          format: date-time
+          description: Associated date time 
+          example: '1985-04-12T23:20:50.52'
+      required:
+      - event
+      
+    SearchResult:
+      type: object
+      description: Search result
+      properties:
+        events:
+          type: array
+          description: Found events
+          items:
+            $ref: '#/components/schemas/SearchResultItem'
+        total:
+          type: integer
+          description: Number of result items without paging
+          example: 1000
+        esRequest:
+          type: object
+          description: Result ElasticSearch search request (only in debug mode)
+            
+    SearchResultItem:
+      type: object
+      description: Search result
+      properties:
+        content:
+          type: object
+          description: Indexed event
+          example: {"id": 10, "Value": "payload"}
+        score:
+          type: number
+          format: float
+          description: Relevation value
+          example: 1.1
+        explanation:
+          type: object
+          description: Request explanation (only in debug mode)
+          properties:
+            description: 
+              type: string
+              example: '*:*'
+            details:
+              type: object
+            value:
+              type: integer

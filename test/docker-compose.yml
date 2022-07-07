@@ -2,5 +2,75 @@ version: '3.2'
 
 services:
 
+  mps-es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
+    container_name: mps-es
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - TZ=Europe/Moscow
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - mylab_search_test_es_data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
+  mps-mq:
+    container_name: mps-mq
+    image: rabbitmq:3.8.3-management
+    volumes:
+      - mylab_search_test_mq_data:/var/lib/rabbitmq
+      - ./rabbit/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbit/0-users.json:/etc/rabbitmq/definitions/0-users.json
+      - ./rabbit/1-defs.json:/etc/rabbitmq/definitions/1-defs.json
+    environment:
+      TZ: Europe/Moscow
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  mps-indexer:
+    container_name: mps-indexer
+    image: ghcr.io/mylab-search-fx/protocol-indexer:local
+    environment:
+      MQ__Host: mps-mq
+      MQ__User: test
+      MQ__Password: AICQ0kiYgjUcQNL1AfRA
+      ES__Url: http://mps-es:9200
+      Logging__LogLevel__Default: Debug
+      TZ: Europe/Moscow
+      Indexer__MqQueue: protocol
+      Indexer__EsIndexNamePrefix: test-
+    ports:
+      - 8085:80
+    depends_on:
+    - mps-mq
+    - mps-es
+
+  mps-searcher:
+    container_name: mps-searcher
+    image: ghcr.io/mylab-search-fx/protocol-searcher:local
+    environment:
+      ES__Url: http://mps-es:9200
+      Logging__LogLevel__Default: Debug
+      Searcher__Debug: "true"
+      Searcher__Token__ExpirySec: 10
+      Searcher__Token__SignKey: test-test-test-test
+      Searcher__EsIndexNamePrefix: test-
+      TZ: Europe/Moscow
+    ports:
+      - 8086:80
+    depends_on:
+    - mps-es
+
+volumes:
+  mylab_search_test_es_data:
+  mylab_search_test_mq_data:
+
 networks:
-  mylab-protocol-store-test:
+  default:
+    name: mylab-protocol-storage-test

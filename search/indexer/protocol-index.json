@@ -1,0 +1,9 @@
+{
+	"mappings": {
+		"properties": {
+			"id": { "type": "keyword" },
+			"subject": { "type": "keyword" },
+			"datetime": { "type": "date" }
+		}
+	}
+}
