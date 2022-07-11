@@ -1,1 +1,1 @@
-docker build -f ./Dockerfile -t ghcr.io/mylab-search-fx/protocol-storage:local ../src
+docker build -f ./Dockerfile -t ghcr.io/mylab-search-fx/protocol-storage-api:local ../src
