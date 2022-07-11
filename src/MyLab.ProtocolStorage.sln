@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "Integra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLab.ProtocolStorage.Client", "MyLab.ProtocolStorage.Client\MyLab.ProtocolStorage.Client.csproj", "{B8A183D0-926D-470D-B1AE-8CFD69669B39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{9A76FBED-9C26-410E-B6EB-1C3D143C3F0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{9A76FBED-9C26-410E-B6EB-1C3D143C3F0F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyLab.RabbitClient", "..\..\..\mylab-tools\rabbit-client\src\MyLab.RabbitClient\MyLab.RabbitClient.csproj", "{BF15458A-2487-4EAA-B9DF-3CA840A619B7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{9A76FBED-9C26-410E-B6EB-1C3D143C3F0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A76FBED-9C26-410E-B6EB-1C3D143C3F0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A76FBED-9C26-410E-B6EB-1C3D143C3F0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF15458A-2487-4EAA-B9DF-3CA840A619B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF15458A-2487-4EAA-B9DF-3CA840A619B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF15458A-2487-4EAA-B9DF-3CA840A619B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF15458A-2487-4EAA-B9DF-3CA840A619B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

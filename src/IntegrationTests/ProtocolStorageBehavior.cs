@@ -11,6 +11,7 @@ using MyLab.ProtocolStorage.Client;
 using MyLab.ProtocolStorage.Client.Models;
 using MyLab.RabbitClient;
 using MyLab.RabbitClient.Model;
+using MyLab.Search.EsAdapter.Inter;
 using MyLab.Search.EsTest;
 using Xunit;
 using Xunit.Abstractions;
@@ -103,6 +104,46 @@ namespace IntegrationTests
             Assert.Equal(eventObj.Subject, foundEvent.Subject);
         }
 
+        [Fact]
+        public async Task ShouldFilterBySubject()
+        {
+            //Arrange
+            var fooSubjectEvent = new TestProtocolEvent
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Message = "foo",
+                Subject = "subject-foo",
+                DateTime = DateTime.Now
+            };
+
+            var barSubjectEvent = new TestProtocolEvent
+            {
+                Id = Guid.NewGuid().ToString("N"),
+                Message = "bar",
+                Subject = "subject-bar"
+            };
+
+            var searchReq = new ClientSearchRequest();
+
+            var searchToken = await _tokenApi.CreateTokenForSubjectAsync("subject-foo");
+
+            //Act
+            await _protocolApi.PostEventAsync("test", fooSubjectEvent);
+            await _protocolApi.PostEventAsync("test", barSubjectEvent);
+            await Task.Delay(1000);
+
+            var searchRes = await _protocolApi.SearchAsync("test", searchReq, searchToken);
+
+            var foundEvent = searchRes.Events.Select(e => e.Content.ToObject<TestProtocolEvent>()).FirstOrDefault();
+
+            //Assert
+            Assert.Single(searchRes.Events);
+            Assert.NotNull(foundEvent);
+            Assert.Equal(fooSubjectEvent.Id, foundEvent.Id);
+            Assert.Equal(fooSubjectEvent.DateTime, foundEvent.DateTime);
+            Assert.Equal(fooSubjectEvent.Subject, foundEvent.Subject);
+        }
+
         void ConfigureTestApi(IServiceCollection services)
         {
             services
@@ -141,9 +182,17 @@ namespace IntegrationTests
             public string Message { get; set; }
         }
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            return _esFxt.IndexTools.PruneIndexAsync("test-index");
+            try
+            {
+                await _esFxt.IndexTools.DeleteIndexAsync("test-test");
+            }
+            catch (EsException e) when (e.Response.ServerError.Status == 404)
+            {
+            }
+
+            _queue.Purge();
         }
 
         public Task DisposeAsync()
