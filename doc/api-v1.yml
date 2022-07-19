@@ -23,7 +23,7 @@ paths:
         content:
           'application/json':
             schema:
-              $ref: '#/components/schemas/PushProtocolEventRequest'
+              $ref: '#/components/schemas/ProtocolEvent'
               
   '/protocols/{protocol}/searcher':
     post:
@@ -182,30 +182,19 @@ components:
       type: object
       description: Contains protocol event properties
       additionalProperties: true
-      example:
-        date-time: 01-02-2023
-        content: This is a protocol message
-        
-    PushProtocolEventRequest:
-      type: object
       properties:
-        event:
-          $ref: '#/components/schemas/ProtocolEvent'
+        id:
+          type: string
+          description: event identifier
+          example: 'b6738a45784f4fb1b7b15d747e1c72fb'
         subject:
           type: string
-          description: Event subject identifier
-          example: 'user@domain.com'
-        sender:
-          type: string
-          description: Sender application identifier
-          example: login-service
-        dateTime:
+          description: event subject
+          example: 'user@dmain'
+        datetime: 
           type: string
           format: date-time
-          description: Associated date time 
           example: '1985-04-12T23:20:50.52'
-      required:
-      - event
       
     SearchResult:
       type: object

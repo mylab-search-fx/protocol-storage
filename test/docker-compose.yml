@@ -8,6 +8,7 @@ services:
     environment:
       - discovery.type=single-node
       - bootstrap.memory_lock=true
+      - action.auto_create_index=.watches,.triggered_watches,.watcher-history-*
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - TZ=Europe/Moscow
     ulimits:
@@ -35,7 +36,7 @@ services:
 
   mps-indexer:
     container_name: mps-indexer
-    image: ghcr.io/mylab-search-fx/protocol-indexer:local
+    image: ghcr.io/mylab-search-fx/protocol-storage-indexer:local
     environment:
       MQ__Host: mps-mq
       MQ__User: test
@@ -53,7 +54,7 @@ services:
 
   mps-searcher:
     container_name: mps-searcher
-    image: ghcr.io/mylab-search-fx/protocol-searcher:local
+    image: ghcr.io/mylab-search-fx/protocol-storage-searcher:local
     environment:
       ES__Url: http://mps-es:9200
       Logging__LogLevel__Default: Debug
