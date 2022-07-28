@@ -36,6 +36,7 @@ namespace MyLab.ProtocolStorage
                     reg.RegisterContract<ISearcherApiV3>();
                 }, Configuration)
                 .AddRabbit(RabbitConnectionStrategy.Background)
+                .ConfigureRabbit(Configuration)
                 .AddRabbitTracing()
                 .AddLogging(l => l.AddMyLabConsole())
                 .AddUrlBasedHttpMetrics();
