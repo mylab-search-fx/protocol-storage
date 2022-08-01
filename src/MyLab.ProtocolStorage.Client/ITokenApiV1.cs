@@ -6,7 +6,7 @@ namespace MyLab.ProtocolStorage.Client
     /// <summary>
     /// The token API contract
     /// </summary>
-    [Api("v1/search-token", Key = "protocol-storage:token")]
+    [Api("v1/search-token", Key = "protocol-storage-token")]
     public interface ITokenApiV1
     {
         /// <summary>

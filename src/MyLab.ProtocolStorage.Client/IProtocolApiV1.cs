@@ -7,7 +7,7 @@ namespace MyLab.ProtocolStorage.Client
     /// <summary>
     /// The protocols API contract
     /// </summary>
-    [Api("v1/protocols", Key = "protocol-storage:protocols")]
+    [Api("v1/protocols", Key = "protocol-storage-protocols")]
     public interface IProtocolApiV1
     {
         /// <summary>
