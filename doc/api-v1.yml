@@ -191,6 +191,10 @@ components:
           type: string
           description: event subject
           example: 'user@dmain'
+        type:
+          type: string
+          description: event type
+          example: 'doc-deletion'
         datetime: 
           type: string
           format: date-time

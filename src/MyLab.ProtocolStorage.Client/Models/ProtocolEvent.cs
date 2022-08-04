@@ -21,6 +21,12 @@ namespace MyLab.ProtocolStorage.Client.Models
         public string Subject { get; set; }
 
         /// <summary>
+        /// Event type
+        /// </summary>
+        [JsonProperty("type")]
+        public string Type { get; set; }
+
+        /// <summary>
         /// Associated date time 
         /// </summary>
         [JsonProperty("datetime")]
