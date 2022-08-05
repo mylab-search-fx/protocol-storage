@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>1.1.0</Version>
-    <AssemblyVersion>1.1.0.2707</AssemblyVersion>
-    <FileVersion>1.1.0.2707</FileVersion>
+    <Version>1.1.2</Version>
+    <AssemblyVersion>1.1.2.0508</AssemblyVersion>
+    <FileVersion>1.1.2.0508</FileVersion>
     <Authors>Andrey O.</Authors>
     <Company>Andrey O.</Company>
     <Copyright>Copyright (c) 2022 Andrey Osintsev &amp;lt;ozzy.ext@gmail.com&amp;gt;</Copyright>
