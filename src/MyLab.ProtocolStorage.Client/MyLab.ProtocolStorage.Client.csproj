@@ -32,6 +32,8 @@
 
   <ItemGroup>
     <PackageReference Include="MyLab.ApiClient" Version="3.15.25" />
+    <PackageReference Include="MyLab.Log" Version="3.3.15" />
+    <PackageReference Include="MyLab.Log.Dsl" Version="3.5.3" />
     <PackageReference Include="MyLab.Search.SearcherClient" Version="1.8.7" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
