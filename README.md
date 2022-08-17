@@ -182,3 +182,110 @@ services:
       * `Url` - url индексатора
     * `searcher` - параметры подключения к поисковику
       * `Url` - url поисковика
+
+## Клиент
+
+Для применения в `.NET` проектах разработана библиотека с клиентскими средствами для работы с `MyLab.ProtocolStorage` - [![NuGet](https://img.shields.io/nuget/v/MyLab.ProtocolStorage.Client.svg)](https://www.nuget.org/packages/MyLab.ProtocolStorage.Client/)
+
+### Контракты 
+
+Библиотека содержит контракты конечных точек `MyLab.ProtocolStorage`, разработанные на базе [MyLab.ApiClient](https://github.com/mylab-tools/apiclient). Эти контракты можно использовать, чтобы работать с сервисом `MyLab.ProtocolStorage` как с объектной моделью.
+
+Контракт `API` для создания токена поиска:
+
+```C#
+/// <summary>
+/// The token API contract
+/// </summary>
+[Api("v1/search-token", Key = "protocol-storage-token")]
+public interface ITokenApiV1
+{
+    /// <summary>
+    /// Creates token to search for protocol items without restrictions
+    /// </summary>
+    [Post("total")]
+    Task<string> CreateTotalTokenAsync();
+
+    /// <summary>
+    /// Creates token to search for protocol items which owned by specified subject
+    /// </summary>
+    [Post("for-subject/{subjectId}")]
+    Task<string> CreateTokenForSubjectAsync([Path]string subjectId);
+}
+```
+
+Контракт `API` для работы с событиями протокола:
+
+```C#
+/// <summary>
+/// The protocols API contract
+/// </summary>
+[Api("v1/protocols", Key = "protocol-storage-protocols")]
+public interface IProtocolApiV1
+{
+    /// <summary>
+    /// Pushes event into specified protocol
+    /// </summary>
+    [Post("{protocolId}/collector")]
+    Task PostEventAsync([Path]string protocolId, [JsonContent] ProtocolEvent eventObj);
+
+    /// <summary>
+    /// Searches for specified protocol items
+    /// </summary>
+    [Post("{protocolId}/searcher")]
+    Task<SearchResult> SearchAsync([Path] string protocolId, [JsonContent] ClientSearchRequest request, [Header("X-Search-Token")] string searchToken);
+}
+```
+
+### Безопасный индексатор
+
+Безопасный индексатор `SafeProtocolIndexerV1` - класс, обеспечивающий сокрытие возможных ошибок во время индексирования события протокола. Главной мотивацией создания такого инструмента является подход, при котором ведение протокола не должно влиять на основную функциональность.
+
+Для использования безопасного индексатора необходимо его создать и передать:
+* объект `API` протоколов (`IProtocolApiV1`)
+* [DSL-логгер](https://github.com/mylab-log/log-dsl) (опционально)
+
+```C#
+class TestProtocolEvent : ProtocolEvent
+{
+    public string Account { get; set; }
+    public string Action { get; set; }
+}
+
+var indexer = new SafeProtocolIndexerV1(api, dslLogger);
+
+var eventObj = new TestProtocolEvent
+{
+    Account = "ololo@mytest.com",
+    Action = "login"
+};
+
+await indexer.PostEventAsync("foo", eventObj);
+```
+
+Пример лога об ошибке:
+
+```yml
+Message: Protocol writing error
+Time: 2022-08-17T20:20:53.436
+Labels:
+  log_level: error
+Facts:
+  protocol-id: foo
+  event-obj:
+    Account: ololo@mytest.com
+    Action: login
+Exception:
+  Message: Exception of type 'System.Exception' was thrown.
+  Type: System.Exception
+  StackTrace: >2-
+        at Moq.Behaviors.ThrowException.Execute(Invocation invocation) in C:\projects\moq4\src\Moq\Behaviors\ThrowException.cs:line 22
+        at Moq.MethodCall.ExecuteCore(Invocation invocation) in C:\projects\moq4\src\Moq\MethodCall.cs:line 110
+        at Moq.Setup.Execute(Invocation invocation) in C:\projects\moq4\src\Moq\Setup.cs:line 84
+        at Moq.FindAndExecuteMatchingSetup.Handle(Invocation invocation, Mock mock) in C:\projects\moq4\src\Moq\Interception\InterceptionAspects.cs:line 95
+        at Moq.Mock.Moq.IInterceptor.Intercept(Invocation invocation) in C:\projects\moq4\src\Moq\Interception\Mock.cs:line 17
+        at Moq.CastleProxyFactory.Interceptor.Intercept(IInvocation underlying) in C:\projects\moq4\src\Moq\Interception\CastleProxyFactory.cs:line 107
+        at Castle.DynamicProxy.AbstractInvocation.Proceed()
+        at Castle.Proxies.IProtocolApiV1Proxy.PostEventAsync(String protocolId, ProtocolEvent eventObj)
+        at MyLab.ProtocolStorage.Client.SafeProtocolIndexerV1.PostEventAsync(String protocolId, ProtocolEvent eventObj) in C:\Users\ozzye\Documents\prog\my\mylab-search-fx\protocol-storage\src\MyLab.ProtocolStorage.Client\SafeProtocolIndexerV1.cs:line 40
+```
