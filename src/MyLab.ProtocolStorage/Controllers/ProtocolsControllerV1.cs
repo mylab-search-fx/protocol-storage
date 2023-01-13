@@ -12,11 +12,11 @@ using MyLab.Log.Dsl;
 using MyLab.ProtocolStorage.Models;
 using MyLab.RabbitClient.Publishing;
 using MyLab.Search.IndexerClient;
-using MyLab.Search.Searcher.Client;
+using MyLab.Search.SearcherClient;
 using MyLab.Search.SearcherClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using QuerySearchStrategy = MyLab.Search.Searcher.Client.QuerySearchStrategy;
+using QuerySearchStrategy = MyLab.Search.SearcherClient.QuerySearchStrategy;
 
 namespace MyLab.ProtocolStorage.Controllers
 {
@@ -81,7 +81,7 @@ namespace MyLab.ProtocolStorage.Controllers
                 Limit = request.Limit,
                 Query = request.Query,
                 Filters = request.Filters?.Select(f =>
-                    new Search.Searcher.Client.FilterRef
+                    new Search.SearcherClient.FilterRef
                     {
                         Id = f.Id,
                         Args = f.Args

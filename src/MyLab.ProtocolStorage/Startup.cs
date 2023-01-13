@@ -7,7 +7,7 @@ using MyLab.ApiClient;
 using MyLab.HttpMetrics;
 using MyLab.Log;
 using MyLab.RabbitClient;
-using MyLab.Search.Searcher.Client;
+using MyLab.Search.SearcherClient;
 using MyLab.Search.SearcherClient;
 using MyLab.WebErrors;
 using Prometheus;

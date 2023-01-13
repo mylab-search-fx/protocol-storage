@@ -1,4 +1,4 @@
-﻿using MyLab.Search.Searcher.Client;
+﻿using MyLab.Search.SearcherClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
