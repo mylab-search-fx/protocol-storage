@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MyLab.Search.Searcher.Client;
+using MyLab.Search.SearcherClient;
 using MyLab.Search.SearcherClient;
 
 namespace MyLab.ProtocolStorage.Controllers
