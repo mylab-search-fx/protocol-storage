@@ -5,7 +5,8 @@
 			"id": { "type": "keyword" },
 			"subject": { "type": "keyword" },
 			"datetime": { "type": "date" },
-			"type": { "type": "keyword" }
+			"type": { "type": "keyword" },
+			"trace_id": { "type": "keyword" }
 		}
 	}
 }

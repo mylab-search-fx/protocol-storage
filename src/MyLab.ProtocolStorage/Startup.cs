@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,8 +9,10 @@ using MyLab.HttpMetrics;
 using MyLab.Log;
 using MyLab.RabbitClient;
 using MyLab.Search.SearcherClient;
-using MyLab.Search.SearcherClient;
 using MyLab.WebErrors;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Prometheus;
 
 namespace MyLab.ProtocolStorage
@@ -41,6 +44,29 @@ namespace MyLab.ProtocolStorage
                 .AddLogging(l => l.AddMyLabConsole())
                 .AddUrlBasedHttpMetrics();
 
+            services.AddOpenTelemetry().WithTracing((builder) =>
+            {
+                builder
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault()
+                        .AddEnvironmentVariableDetector()
+                        .AddTelemetrySdk()
+                        .AddService("mylab-protocol-storage")
+                    );
+
+                var otlpConfig = Configuration.GetSection("Otlp");
+                if (otlpConfig.Exists())
+                {
+                    builder
+                        .AddOtlpExporter(opt =>
+                        {
+                            opt.Endpoint = new Uri(otlpConfig["endpoint"]);
+                            opt.Protocol = (OtlpExportProtocol)Enum.Parse(typeof(OtlpExportProtocol),
+                                otlpConfig["protocol"]);
+                        });
+                }
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

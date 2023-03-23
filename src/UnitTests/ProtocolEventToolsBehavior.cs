@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyLab.ProtocolStorage.Models;
+using MyLab.ProtocolStorage.Tools;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -23,7 +19,7 @@ namespace UnitTests
             //Assert
             Assert.True(set);
             Assert.NotNull(actualId);
-            Assert.Equal(actualId, json.Property("id")?.Value.Value<string>());
+            Assert.Equal(actualId, json.Property(ProtocolEventTools.IdPropertyName)?.Value.Value<string>());
         }
 
         [Fact]
@@ -32,7 +28,7 @@ namespace UnitTests
             //Arrange
             var json = new JObject
             {
-                { "id", null }
+                { ProtocolEventTools.IdPropertyName, null }
             };
 
             //Act
@@ -41,16 +37,16 @@ namespace UnitTests
             //Assert
             Assert.True(set);
             Assert.NotNull(actualId);
-            Assert.Equal(actualId, json.Property("id")?.Value.Value<string>());
+            Assert.Equal(actualId, json.Property(ProtocolEventTools.IdPropertyName)?.Value.Value<string>());
         }
 
         [Fact]
-        public void ShouldNotSetIdSpecified()
+        public void ShouldNotSetIdIfSpecified()
         {
             //Arrange
             var json = new JObject
             {
-                { "id", "foo" }
+                { ProtocolEventTools.IdPropertyName, "foo" }
             };
 
             //Act
@@ -59,7 +55,7 @@ namespace UnitTests
             //Assert
             Assert.False(set);
             Assert.Equal("foo", actualId);
-            Assert.Equal("foo", json.Property("id")?.Value.Value<string>());
+            Assert.Equal("foo", json.Property(ProtocolEventTools.IdPropertyName)?.Value.Value<string>());
         }
 
         [Fact]
@@ -74,7 +70,7 @@ namespace UnitTests
             //Assert
             Assert.True(set);
             Assert.NotNull(actualDt);
-            Assert.Equal(actualDt, json.Property("datetime")?.Value.Value<DateTime>());
+            Assert.Equal(actualDt, json.Property(ProtocolEventTools.DatetimePropertyName)?.Value.Value<DateTime>());
         }
 
         [Fact]
@@ -83,7 +79,7 @@ namespace UnitTests
             //Arrange
             var json = new JObject
             {
-                { "datetime", null }
+                { ProtocolEventTools.DatetimePropertyName, null }
             };
 
             //Act
@@ -92,7 +88,7 @@ namespace UnitTests
             //Assert
             Assert.True(set);
             Assert.NotNull(actualDt);
-            Assert.Equal(actualDt, json.Property("datetime")?.Value.Value<DateTime>());
+            Assert.Equal(actualDt, json.Property(ProtocolEventTools.DatetimePropertyName)?.Value.Value<DateTime>());
         }
 
         [Fact]
@@ -102,7 +98,7 @@ namespace UnitTests
             var now = DateTime.Now.AddMinutes(-1);
             var json = new JObject
             {
-                { "datetime", now }
+                { ProtocolEventTools.DatetimePropertyName, now }
             };
 
             //Act
@@ -111,7 +107,43 @@ namespace UnitTests
             //Assert
             Assert.False(set);
             Assert.Equal(now, actualDt);
-            Assert.Equal(now, json.Property("datetime")?.Value.Value<DateTime>());
+            Assert.Equal(now, json.Property(ProtocolEventTools.DatetimePropertyName)?.Value.Value<DateTime>());
+        }
+
+        [Theory]
+        [InlineData("00-80e1afed08e019fc1110464cfa66635c-7a085853722dc6d2-01")]
+        [InlineData("80e1afed08e019fc1110464cfa66635c")]
+        public void ShouldSetTraceIdIfNotDefined(string taraceparentHeaderValue)
+        {
+            //Arrange
+            var json = new JObject();
+
+            //Act
+            var set = ProtocolEventTools.SetTraceIdIfNotDefined(json, taraceparentHeaderValue, out var actualTraceId);
+
+            //Assert
+            Assert.True(set);
+            Assert.NotNull(actualTraceId);
+            Assert.Equal("80e1afed08e019fc1110464cfa66635c", actualTraceId);
+            Assert.Equal("80e1afed08e019fc1110464cfa66635c", json.Property(ProtocolEventTools.TraceIdPropertyName)?.Value);
+        }
+
+        [Fact]
+        public void ShouldNotSetTraceIdIfDefined()
+        {
+            //Arrange
+            var json = new JObject
+            {
+                { ProtocolEventTools.TraceIdPropertyName, "7a085853722dc6d2" }
+            };
+
+            //Act
+            var set = ProtocolEventTools.SetTraceIdIfNotDefined(json, "80e1afed08e019fc1110464cfa66635c", out var actualTraceId);
+
+            //Assert
+            Assert.False(set);
+            Assert.Equal("7a085853722dc6d2", actualTraceId);
+            Assert.Equal("7a085853722dc6d2", json.Property(ProtocolEventTools.TraceIdPropertyName)?.Value);
         }
     }
 }
