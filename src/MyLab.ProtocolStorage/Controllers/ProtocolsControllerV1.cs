@@ -1,22 +1,18 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyLab.ApiClient;
 using MyLab.Log.Dsl;
 using MyLab.ProtocolStorage.Models;
+using MyLab.ProtocolStorage.Tools;
 using MyLab.RabbitClient.Publishing;
 using MyLab.Search.IndexerClient;
 using MyLab.Search.SearcherClient;
-using MyLab.Search.SearcherClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using QuerySearchStrategy = MyLab.Search.SearcherClient.QuerySearchStrategy;
 
 namespace MyLab.ProtocolStorage.Controllers
 {
@@ -51,6 +47,7 @@ namespace MyLab.ProtocolStorage.Controllers
 
             ProtocolEventTools.SetRandomIdIfNotDefined(protocolEvent, out _);
             ProtocolEventTools.SetDateTimeNowIfNotDefined(protocolEvent, out _);
+            ProtocolEventTools.SetTraceIdIfNotDefined(protocolEvent, Request.Headers["traceparent"], out _);
 
             var mwMsg = new IndexingMqMessage
             {

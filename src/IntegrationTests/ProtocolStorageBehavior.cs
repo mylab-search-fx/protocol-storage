@@ -2,58 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using MyLab.ApiClient;
-using MyLab.ApiClient.Test;
-using MyLab.ProtocolStorage;
-using MyLab.ProtocolStorage.Client;
-using MyLab.ProtocolStorage.Client.Models;
-using MyLab.RabbitClient;
-using MyLab.RabbitClient.Model;
-using MyLab.Search.EsAdapter.Inter;
-using MyLab.Search.EsTest;
+using MyLab.Search.SearcherClient;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace IntegrationTests
 {
     using ClientSearchRequest  = MyLab.ProtocolStorage.Client.Models.ClientSearchRequest;
     using FilterRef = MyLab.ProtocolStorage.Client.Models.FilterRef;
 
-    public class ProtocolStorageBehavior : 
-        IClassFixture<EsFixture<TestEsFxtStrategy>>,
-        IClassFixture<TestApi<Startup, ITokenApiV1>>,
-        IClassFixture<TestApi<Startup, IProtocolApiV1>>,
-        IAsyncLifetime
+    public partial class ProtocolStorageBehavior 
     {
-        private readonly ITestOutputHelper _output;
-        private readonly RabbitQueue _queue;
-        private readonly ITokenApiV1 _tokenApi;
-        private readonly IProtocolApiV1 _protocolApi;
-        private readonly EsFixture<TestEsFxtStrategy> _esFxt;
-
-        public ProtocolStorageBehavior(
-            EsFixture<TestEsFxtStrategy> esFxt,
-            TestApi<Startup, ITokenApiV1> tokenApi,
-            TestApi<Startup, IProtocolApiV1> protocolApi,
-            ITestOutputHelper output)
-        {
-            _output = output;
-            
-            _queue = new RabbitQueue("protocol", TestTools.ChannelProvider);
-
-            _esFxt = esFxt;
-
-            tokenApi.Output = output; 
-            tokenApi.ServiceOverrider = ConfigureTestApi;
-            _tokenApi = tokenApi.StartWithProxy();
-            
-            protocolApi.Output = output;
-            protocolApi.ServiceOverrider = ConfigureTestApi;
-            _protocolApi = protocolApi.StartWithProxy();
-        }
-
         [Fact]
         public async Task ShouldIndexEvent()
         {
@@ -134,7 +92,9 @@ namespace IntegrationTests
 
             var searchRes = await _protocolApi.SearchAsync("test", searchReq, searchToken);
 
-            var foundEvent = searchRes.Events.Select(e => e.Content.ToObject<TestProtocolEvent>()).FirstOrDefault();
+            var foundEvent = searchRes.Events
+                .Select(e => e.Content.ToObject<TestProtocolEvent>())
+                .FirstOrDefault();
 
             //Assert
             Assert.Single(searchRes.Events);
@@ -144,60 +104,61 @@ namespace IntegrationTests
             Assert.Equal(fooSubjectEvent.Subject, foundEvent.Subject);
         }
 
-        void ConfigureTestApi(IServiceCollection services)
+        [Fact]
+        public async Task ShouldFilterByTrace()
         {
-            services
-                .Configure<RabbitOptions>(opt =>
-                {
-                    opt.Host = "localhost";
-                    opt.Port = 5672;
-                    opt.User = "test";
-                    opt.Password = "AICQ0kiYgjUcQNL1AfRA";
-                    opt.DefaultPub = new PublishOptions
-                    {
-                        RoutingKey = "protocol"
-                    };
-                })
-                .Configure<ApiClientsOptions>(opt =>
-                {
-                    opt.List.Add("indexer", new ApiConnectionOptions
-                    {
-                        Url = "http://localhost:8085"
-                    });
-                    opt.List.Add("searcher", new ApiConnectionOptions
-                    {
-                        Url = "http://localhost:8086"
-                    });
-                })
-                .AddLogging(l =>
-                {
-                    l.ClearProviders()
-                        .AddXUnit(_output)
-                        .AddFilter(lvl => lvl >= LogLevel.Debug);
-                });
-        }
-
-        class TestProtocolEvent : ProtocolEvent
-        {
-            public string Message { get; set; }
-        }
-
-        public async Task InitializeAsync()
-        {
-            try
+            //Arrange
+            var fooSubjectEvent = new TestProtocolEvent
             {
-                await _esFxt.IndexTools.DeleteIndexAsync("test-test");
-            }
-            catch (EsException e) when (e.Response.ServerError.Status == 404)
+                Id = Guid.NewGuid().ToString("N"),
+                Message = "foo",
+                Subject = "subject-foo",
+                TraceId = "11CBE9EB5B9245BF8A9F30CFD2AF6D3E",
+                DateTime = DateTime.Now
+            };
+
+            var barSubjectEvent = new TestProtocolEvent
             {
-            }
+                Id = Guid.NewGuid().ToString("N"),
+                Message = "bar",
+                Subject = "subject-bar",
+                TraceId = "DC5478B70EB2451E8C58C7880DA39B7D",
+                DateTime = DateTime.Now
+            };
 
-            _queue.Purge();
+            var searchReq = new ClientSearchRequest
+            {
+                Filters = new []
+                {
+                    new FilterRef
+                    { 
+                        Id = "by-trace", 
+                        Args = new Dictionary<string, string>
+                        {
+                            { "trace_id", "DC5478B70EB2451E8C58C7880DA39B7D" }
+                        }
+                    }
+                }
+            };
+
+            var searchToken = await _tokenApi.CreateTotalTokenAsync();
+
+            //Act
+            await _protocolApi.PostEventAsync("test", fooSubjectEvent);
+            await _protocolApi.PostEventAsync("test", barSubjectEvent);
+            await Task.Delay(1000);
+
+            var searchRes = await _protocolApi.SearchAsync("test", searchReq, searchToken);
+
+            var foundEvent = searchRes.Events.Select(e => e.Content.ToObject<TestProtocolEvent>()).FirstOrDefault();
+
+            //Assert
+            Assert.Single(searchRes.Events);
+            Assert.NotNull(foundEvent);
+            Assert.Equal(barSubjectEvent.Id, foundEvent.Id);
+            Assert.Equal(barSubjectEvent.DateTime, foundEvent.DateTime);
+            Assert.Equal(barSubjectEvent.Subject, foundEvent.Subject);
         }
 
-        public Task DisposeAsync()
-        {
-            return Task.CompletedTask;
-        }
     }
 }

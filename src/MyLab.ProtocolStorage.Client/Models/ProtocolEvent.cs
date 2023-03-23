@@ -27,6 +27,12 @@ namespace MyLab.ProtocolStorage.Client.Models
         public string Type { get; set; }
 
         /// <summary>
+        /// Trace identifier
+        /// </summary>
+        [JsonProperty("trace_id")]
+        public string TraceId { get; set; }
+
+        /// <summary>
         /// Associated date time 
         /// </summary>
         [JsonProperty("datetime")]
