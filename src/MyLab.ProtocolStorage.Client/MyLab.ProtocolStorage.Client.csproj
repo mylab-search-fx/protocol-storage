@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Version>1.3.5</Version>
-    <AssemblyVersion>1.3.5.2303</AssemblyVersion>
-    <FileVersion>1.3.5.2303</FileVersion>
+    <Version>1.4.5</Version>
+    <AssemblyVersion>1.4.5.1004</AssemblyVersion>
+    <FileVersion>1.4.5.1004</FileVersion>
     <Authors>Andrey O.</Authors>
     <Company>Andrey O.</Company>
-    <Copyright>Copyright (c) 2022 Andrey Osintsev &amp;lt;ozzy.ext@gmail.com&amp;gt;</Copyright>
+    <Copyright>Copyright (c) 2023 Andrey Osintsev &amp;lt;ozzy.ext@gmail.com&amp;gt;</Copyright>
     <PackageProjectUrl>https://github.com/mylab-tools/protocol-storage</PackageProjectUrl>
     <PackageIcon>log.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>

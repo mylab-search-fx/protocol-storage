@@ -210,7 +210,7 @@ services:
 /// <summary>
 /// The token API contract
 /// </summary>
-[Api("v1/search-token", Key = "protocol-storage-token")]
+[Api("v1/search-token", Key = "protocol-storage")]
 public interface ITokenApiV1
 {
     /// <summary>
@@ -233,7 +233,7 @@ public interface ITokenApiV1
 /// <summary>
 /// The protocols API contract
 /// </summary>
-[Api("v1/protocols", Key = "protocol-storage-protocols")]
+[Api("v1/protocols", Key = "protocol-storage")]
 public interface IProtocolApiV1
 {
     /// <summary>
